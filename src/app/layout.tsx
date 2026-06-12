@@ -18,9 +18,9 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className="h-screen overflow-hidden antialiased"
+      className="antialiased"
     >
-      <body className="h-screen overflow-hidden">{children}</body>
+      <body className="min-h-screen">{children}</body>
     </html>
   );
 }
