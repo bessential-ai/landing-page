@@ -16,7 +16,8 @@ import {
   Lock, 
   ChevronRight,
   ListChecks,
-  ShieldAlert
+  ShieldAlert,
+  Download
 } from "lucide-react";
 
 const ACCENT_GRAD = "linear-gradient(135deg, #6366F1, #8B5CF6)";
@@ -101,12 +102,12 @@ const ADMIN_REG = [
 ];
 
 const ARTIFACTS = [
-  { t: "진단 리포트", d: "구조화 요약 + 6축 점수 + 강점·리스크·검증 가정" },
-  { t: "린 캔버스", d: "9블록 — 문제·고객·UVP·솔루션·채널·수익·비용·지표·강점" },
-  { t: "개인 vs 법인 비교표", d: "신뢰도·투자·책임·세제 기준 의사결정 표" },
-  { t: "보호자 인터뷰 가이드", d: "통증·대안·지불의사·음성 수용도 질문 세트" },
-  { t: "IR 한 장", d: "문제→솔루션→시장→BM→트랙션→팀→Ask" },
-  { t: "예창패 사업계획서 골격", d: "PSST 구조 초안 (서식·일정 확인 필요)" },
+  { t: "진단 리포트", d: "구조화 요약 + 6축 점수 + 강점·리스크·검증 가정", file: "/docs/diagnostic_report.pdf" },
+  { t: "린 캔버스", d: "9블록 — 문제·고객·UVP·솔루션·채널·수익·비용·지표·강점", file: "/docs/lean_canvas.pdf" },
+  { t: "개인 vs 법인 비교표", d: "신뢰도·투자·책임·세제 기준 의사결정 표", file: "/docs/business_comparison.pdf" },
+  { t: "보호자 인터뷰 가이드", d: "통증·대안·지불의사·음성 수용도 질문 세트", file: "/docs/interview_guide.pdf" },
+  { t: "IR 한 장", d: "문제→솔루션→시장→BM→트랙션→팀→Ask", file: "/docs/one_page_ir.pdf" },
+  { t: "예창패 사업계획서 골격", d: "PSST 구조 초안 (서식·일정 확인 필요)", file: "/docs/yechangpae_proposal.pdf" },
 ];
 
 const leanCanvasData = [
@@ -423,11 +424,25 @@ function Docs({ paid, onUnlock }: { paid: boolean; onUnlock: () => void }) {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 mb-6">
           {ARTIFACTS.map((a, i) => (
-            <div key={i} className="border border-neutral-200 rounded-xl bg-white p-4 shadow-sm hover:border-neutral-400 transition-colors">
-              <FileText size={16} className="text-indigo-600 mb-1.5" />
-              <div className="text-xs font-bold text-neutral-900">{a.t}</div>
-              <p className="text-[11px] text-neutral-500 mt-0.5 leading-relaxed break-keep">{a.d}</p>
-            </div>
+            <a 
+              key={i} 
+              href={a.file} 
+              download={`${a.t}.pdf`}
+              className="group border border-neutral-200 rounded-xl bg-white p-4 shadow-sm hover:border-indigo-500 hover:shadow-md transition-all duration-200 text-left flex flex-col justify-between cursor-pointer"
+            >
+              <div>
+                <div className="flex justify-between items-start mb-1.5">
+                  <FileText size={16} className="text-indigo-600 group-hover:text-indigo-500 transition-colors" />
+                  <Download size={14} className="text-neutral-400 group-hover:text-indigo-600 transition-colors transform group-hover:translate-y-0.5 duration-200" />
+                </div>
+                <div className="text-xs font-bold text-neutral-900 group-hover:text-indigo-600 transition-colors">{a.t}</div>
+                <p className="text-[11px] text-neutral-500 mt-0.5 leading-relaxed break-keep">{a.d}</p>
+              </div>
+              <div className="mt-3 pt-2 border-t border-neutral-100 flex items-center justify-between text-[10px] text-neutral-400 font-semibold group-hover:text-indigo-500 transition-colors">
+                <span>PDF 다운로드</span>
+                <span className="text-[8px] tracking-wider uppercase font-mono bg-neutral-100 px-1 py-0.5 rounded text-neutral-500 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">PDF</span>
+              </div>
+            </a>
           ))}
         </div>
 
