@@ -245,31 +245,83 @@ function DemoMainDashboard({ onStart, onDemo }: { onStart: () => void; onDemo: (
   );
 }
 
+const BM_FIELDS = [
+  { key: "problem",  label: "문제",     q: "누구의 어떤 문제를 푸나요?",    ph: "예) 경도인지장애 부모를 둔 보호자가 부모 상태를 매일 확인하기 어렵다" },
+  { key: "customer", label: "고객",     q: "핵심 고객은 누구인가요?",       ph: "예) 비동거 40~60대 자녀 / 요양·복지기관 / 통신사" },
+  { key: "solution", label: "솔루션",   q: "어떻게 해결하나요?",           ph: "예) 보호자 음성 AI가 매일 안부 전화 → 대화 분석 → 앱 기록·이상 알림" },
+  { key: "revenue",  label: "수익모델", q: "어떻게 돈을 버나요?",          ph: "예) 보호자 월 구독 + 기관 B2B 좌석제 + 통신사 제휴 수수료" },
+  { key: "edge",     label: "차별점",   q: "경쟁 대비 강점은 무엇인가요?", ph: "예) 낯선 기계음이 아닌 익숙한 보호자 목소리 + 임상 자문 네트워크" },
+];
+
 function IdeaInput({ onSubmit }: { onSubmit: () => void }) {
-  const followups = [
-    { q: "누구의 어떤 문제를 푸나요?", ph: "예) 경도인지장애 부모를 둔 보호자가 부모 상태를 매일 확인하기 어렵다" },
-    { q: "지금은 그 문제를 어떻게 해결하고 있나요?", ph: "예) 직접 전화/방문, 단순 안부전화 — 기록·추세 파악이 안 됨" },
-    { q: "어떻게 돈을 벌 계획인가요?", ph: "예) 보호자 월 구독, 기관 B2B, 통신사 제휴" },
-  ];
+  const [oneLiner, setOneLiner] = useState(SAMPLE_INPUT);
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [active, setActive] = useState<string | null>(BM_FIELDS[0].key);
+
+  const filledCount = BM_FIELDS.filter((f) => (values[f.key] || "").trim().length > 0).length;
+
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6 sm:py-10 h-full overflow-y-auto">
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-10 h-full overflow-y-auto">
       <Eyebrow>STEP 01 · 아이디어 가상 가입</Eyebrow>
       <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-neutral-900">어떤 아이디어인가요?</h1>
+      <p className="mt-1.5 text-xs sm:text-sm text-neutral-500 break-keep">아래 칸을 눌러 사업 정보를 항목별로 입력하면, AI가 더 정확하게 진단합니다.</p>
+
       <div className="mt-5">
         <label className="mb-1.5 block text-[11px] sm:text-xs font-bold text-neutral-600">아이디어 한 줄 요약</label>
-        <textarea rows={3} defaultValue={SAMPLE_INPUT} className="w-full resize-none rounded-xl border border-neutral-300 p-3 sm:p-4 text-xs sm:text-sm leading-relaxed text-neutral-900 focus:border-neutral-900 focus:outline-none" />
+        <textarea rows={2} value={oneLiner} onChange={(e) => setOneLiner(e.target.value)} className="w-full resize-none rounded-xl border border-neutral-300 p-3 sm:p-4 text-xs sm:text-sm leading-relaxed text-neutral-900 focus:border-neutral-900 focus:outline-none" />
       </div>
-      <div className="mt-5 rounded-xl border border-neutral-200 bg-white p-4">
-        <div className="mb-3 text-[11px] sm:text-xs font-bold text-indigo-600 tracking-wide">AI 심층 후속 질문 (구조화 데이터 세팅)</div>
-        <div className="space-y-4">
-          {followups.map((f, i) => (
-            <div key={i}>
-              <label className="mb-1 block text-xs font-medium text-neutral-700">Q{i + 1}. {f.q}</label>
-              <input placeholder={f.ph} className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2 text-xs text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:bg-white focus:outline-none" />
+
+      <div className="mt-6 flex items-center justify-between">
+        <div className="text-[11px] sm:text-xs font-bold text-indigo-600 tracking-wide">비즈니스 모델 · 항목별 입력</div>
+        <span className="font-mono text-[10px] sm:text-[11px] text-neutral-400">{filledCount}/{BM_FIELDS.length} 작성됨</span>
+      </div>
+
+      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {BM_FIELDS.map((f) => {
+          const isActive = active === f.key;
+          const val = values[f.key] || "";
+          const filled = val.trim().length > 0;
+          return (
+            <div
+              key={f.key}
+              role="button"
+              tabIndex={0}
+              onClick={() => setActive(f.key)}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setActive(f.key); } }}
+              className={`cursor-pointer text-left rounded-xl border p-3.5 transition-all focus:outline-none ${
+                isActive
+                  ? "border-neutral-900 bg-white shadow-md sm:col-span-2"
+                  : filled
+                  ? "border-indigo-200 bg-indigo-50/40 hover:border-indigo-300"
+                  : "border-neutral-200 bg-white hover:border-neutral-400"
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-neutral-900">{f.label}</span>
+                {filled && <CheckCircle2 size={14} className="text-indigo-500 shrink-0" />}
+              </div>
+              {isActive ? (
+                <div onClick={(e) => e.stopPropagation()}>
+                  <p className="mt-1.5 mb-2 text-[11px] text-neutral-500 break-keep">{f.q}</p>
+                  <textarea
+                    autoFocus
+                    rows={3}
+                    value={val}
+                    placeholder={f.ph}
+                    onChange={(e) => setValues((prev) => ({ ...prev, [f.key]: e.target.value }))}
+                    className="w-full resize-none rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2 text-xs leading-relaxed text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:bg-white focus:outline-none"
+                  />
+                </div>
+              ) : (
+                <p className={`mt-1 text-[11px] leading-relaxed break-keep line-clamp-2 ${filled ? "text-neutral-600" : "text-neutral-400"}`}>
+                  {filled ? val : f.q}
+                </p>
+              )}
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
+
       <div className="mt-5">
         <PrimaryButton onClick={onSubmit} full>진단 및 비즈니스 매핑 시작</PrimaryButton>
       </div>
