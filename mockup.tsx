@@ -734,7 +734,7 @@ function DemoNav({ view, setView, paid, setPaid }: { view: string; setView: (v: 
 
 function DemoMainDashboard({ onStart, onDemo }: { onStart: () => void; onDemo: () => void }) {
   return (
-    <div className="h-full w-full flex flex-col justify-center items-center px-4 py-8 bg-neutral-50 overflow-y-auto select-none">
+    <div className="h-full w-full flex flex-col justify-center items-center px-4 py-8 bg-neutral-50 overflow-y-auto scrollbar-none select-none">
       <div className="max-w-xl w-full text-center bg-white border border-neutral-200 rounded-2xl p-6 sm:p-10 shadow-sm">
         <Eyebrow>B ESSENTIAL DEMO SANDBOX</Eyebrow>
         <h1 className="text-xl sm:text-2xl font-black tracking-tight text-neutral-900 mt-1">사업화 시뮬레이터 데모 샌드박스</h1>
@@ -776,7 +776,7 @@ function IdeaInput({ onSubmit }: { onSubmit: () => void }) {
   const filledCount = BM_FIELDS.filter((f) => (values[f.key] || "").trim().length > 0).length;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-10 h-full overflow-y-auto">
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-10 h-full overflow-y-auto scrollbar-none">
       <SectionHead eyebrow="STEP 01 · 아이디어 가상 가입" title="어떤 아이디어인가요?" sub="아래 칸을 눌러 사업 정보를 항목별로 입력하면, AI가 더 정확하게 진단합니다." />
 
       <div className="mt-1">
@@ -832,7 +832,7 @@ function IdeaInput({ onSubmit }: { onSubmit: () => void }) {
 /* 02 · 종합 진단 (가중 점수 + 장단점) */
 function Diagnosis({ onNext, paid, onUnlock }: { onNext: () => void; paid: boolean; onUnlock: () => void }) {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-6 sm:py-10 h-full overflow-y-auto">
+    <div className="mx-auto max-w-4xl px-4 py-6 sm:py-10 h-full overflow-y-auto scrollbar-none">
       <SectionHead eyebrow="STEP 02 · AI 종합 비즈니스 진단" title="이 아이디어, 지금 점수는?" />
       <IdeaBanner />
 
@@ -951,7 +951,7 @@ function CanvasGrid({ mode }: { mode: "before" | "after" }) {
 function BusinessModel({ onNext, paid, onUnlock }: { onNext: () => void; paid: boolean; onUnlock: () => void }) {
   const [mode, setMode] = useState<"before" | "after">("after");
   return (
-    <div className="mx-auto max-w-5xl px-4 py-6 sm:py-10 h-full overflow-y-auto">
+    <div className="mx-auto max-w-5xl px-4 py-6 sm:py-10 h-full overflow-y-auto scrollbar-none">
       <SectionHead eyebrow="STEP 03 · 비즈니스 모델 · 린 캔버스" title="내 입력 → 유료 진단이 완성한 캔버스" sub="처음 적은 한 줄짜리 입력이, 9블록 린 캔버스로 어떻게 채워지는지 비교해 보세요." />
 
       {/* Before / After 토글 */}
@@ -1006,7 +1006,7 @@ function BusinessModel({ onNext, paid, onUnlock }: { onNext: () => void; paid: b
 /* 04 · 시장조사 */
 function MarketResearch({ onNext }: { onNext: () => void }) {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-6 sm:py-10 h-full overflow-y-auto">
+    <div className="mx-auto max-w-4xl px-4 py-6 sm:py-10 h-full overflow-y-auto scrollbar-none">
       <SectionHead eyebrow="STEP 04 · 시장조사" title="시장 규모·수요·추세" sub="전체 수요를 100으로 놓고 각 니즈가 차지하는 비중을 함께 봅니다." />
 
       {/* 시장 규모 TAM/SAM/SOM */}
@@ -1080,7 +1080,7 @@ function MarketResearch({ onNext }: { onNext: () => void }) {
 /* 05 · 유사 서비스 + 관련 사례 */
 function Competitors({ onNext }: { onNext: () => void }) {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-6 sm:py-10 h-full overflow-y-auto">
+    <div className="mx-auto max-w-4xl px-4 py-6 sm:py-10 h-full overflow-y-auto scrollbar-none">
       <SectionHead eyebrow="STEP 05 · 유사 서비스 · 관련 사례" title="누가 이미 하고 있나?" sub="경쟁·유사 서비스의 핵심 기능과, 내 아이디어와의 차별점을 정리했습니다." />
 
       <div className="text-xs font-bold text-neutral-900 mb-2.5 flex items-center gap-1.5"><Search size={14} className="text-indigo-500" /> 유사 서비스 분석 <span className="text-neutral-400 font-normal">· 눌러서 강점·약점·차별점</span></div>
@@ -1127,7 +1127,7 @@ function Competitors({ onNext }: { onNext: () => void }) {
 function Risk({ onNext, paid, onUnlock }: { onNext: () => void; paid: boolean; onUnlock: () => void }) {
   const levelClass = (lv: string) => (lv === "높음" ? "bg-red-50 text-red-600 border-red-100" : "bg-amber-50 text-amber-700 border-amber-200");
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-10 h-full overflow-y-auto">
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-10 h-full overflow-y-auto scrollbar-none">
       <SectionHead eyebrow="STEP 06 · 리스크 · 규제 · 법률" title="무엇이 발목을 잡는가" sub="위험도와 근거, 그리고 현실적인 대응책·우회법을 함께 제시합니다." />
       <div className="space-y-2.5">
         {RISKS.map((r, i) => (
@@ -1157,7 +1157,7 @@ function Risk({ onNext, paid, onUnlock }: { onNext: () => void; paid: boolean; o
 /* 07 · 핵심 지표 */
 function KeyMetrics({ onNext, paid, onUnlock }: { onNext: () => void; paid: boolean; onUnlock: () => void }) {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-10 h-full overflow-y-auto">
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-10 h-full overflow-y-auto scrollbar-none">
       <SectionHead eyebrow="STEP 07 · 핵심 지표" title="무엇을·누구에게 조사해 뽑을까" sub="측정 방법과 그 지표의 의미, 그리고 어디에 쓰는지까지 연결합니다." />
       <div className="space-y-2.5">
         {METRICS.map((m, i) => (
@@ -1191,7 +1191,7 @@ function KeyMetrics({ onNext, paid, onUnlock }: { onNext: () => void; paid: bool
 /* 08 · 로드맵 (시간이 아닌 단계형) */
 function Roadmap({ onNext, paid, onUnlock }: { onNext: () => void; paid: boolean; onUnlock: () => void }) {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-10 h-full overflow-y-auto">
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-10 h-full overflow-y-auto scrollbar-none">
       <SectionHead eyebrow="STEP 08 · 실행 로드맵" title="'이걸 하면, 다음은 이거'" sub="몇 달 안에 무엇을 하라는 방식이 아니라 — 하나가 되면 그 결과에 따라 다음 스텝으로 넘어가는 조건형 흐름입니다." />
       <div className="space-y-3">
         {ROADMAP_STEPS.map((s, i) => (
@@ -1255,7 +1255,7 @@ function Roadmap({ onNext, paid, onUnlock }: { onNext: () => void; paid: boolean
 function Support({ paid, onUnlock }: { paid: boolean; onUnlock: () => void }) {
   const fitClass = (f: string) => (f.startsWith("높음") || f.includes("높음") ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-amber-50 text-amber-700 border-amber-200");
   return (
-    <div className="mx-auto max-w-4xl px-4 py-6 sm:py-10 h-full overflow-y-auto">
+    <div className="mx-auto max-w-4xl px-4 py-6 sm:py-10 h-full overflow-y-auto scrollbar-none">
       <SectionHead eyebrow="STEP 09 · 지원사업 매칭" title="지금 노려볼 지원사업" sub="아이디어 단계·도메인에 맞는 정부지원사업 후보입니다." />
       <div className="rounded-lg bg-amber-50 border border-amber-200 p-2.5 text-[11px] text-amber-800 mb-4 break-keep flex items-start gap-1.5">
         <AlertTriangle size={13} className="shrink-0 mt-0.5" />
