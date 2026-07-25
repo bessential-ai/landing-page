@@ -34,6 +34,7 @@ export interface MockReport {
   grants: { name: string; org: string; fit: string; note: string }[];
   cases: { name: string; note: string }[];
   sources: Source[];
+  alternatives: { t: string; d: string }[]; // R-10 반려 시 제시할 대안 방향
 }
 
 const DEMO: MockReport = {
@@ -107,6 +108,10 @@ const DEMO: MockReport = {
   sources: [
     { title: "고령인구 통계", publisher: "통계청", checkedAt: "2026-07-01", needsCheck: true },
     { title: "비의료 건강관리 서비스 가이드라인", publisher: "보건복지부", checkedAt: "2026-07-01" },
+  ],
+  alternatives: [
+    { t: "범위 축소 — 비의료 안부 확인에 집중", d: "의료 해석 소지를 줄여 규제 리스크를 낮추고 초기 검증 속도를 높이는 방향." },
+    { t: "채널 전환 — 기관(B2B) 우선", d: "개인 대상 대신 요양·복지 기관을 1차 고객으로 두어 신뢰·구매력 확보." },
   ],
 };
 

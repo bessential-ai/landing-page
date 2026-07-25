@@ -1,10 +1,19 @@
 // [SCR: R-09] ⑨ 관련 사례 · scope: P1
-export default function Page() {
+import ModuleSection from "@/components/report/ModuleSection";
+import { getMockReport } from "@/mocks/report";
+
+export default async function CasesPage({ params }: { params: Promise<{ reportId: string }> }) {
+  const { reportId } = await params;
+  const report = getMockReport(reportId); // TODO(report-api)
+
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-3 px-6 text-center">
-      <span className="text-xs font-medium tracking-wide text-indigo-600">R-09</span>
-      <h1 className="text-2xl font-bold text-gray-900">⑨ 관련 사례</h1>
-      <p className="text-sm text-gray-500">구현 예정</p>
-    </main>
+    <ModuleSection id="R-09" sources={report.sources}>
+      {report.cases.map((c, i) => (
+        <div key={i} className="rounded-xl border border-gray-100 bg-white p-4">
+          <div className="font-semibold text-gray-900 text-sm">{c.name}</div>
+          <p className="text-xs text-gray-500 mt-1 leading-relaxed break-keep">{c.note}</p>
+        </div>
+      ))}
+    </ModuleSection>
   );
 }
