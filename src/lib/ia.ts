@@ -145,3 +145,16 @@ export function authScreens(): Screen[] {
 export function paidScreens(): Screen[] {
   return SCREENS.filter((s) => s.paid);
 }
+
+// ─── 경로 매칭 (동적 세그먼트 대응) — proxy 게이트/브레드크럼에서 사용 ─────────────
+
+// "/report/[reportId]/free" → /^\/report\/[^/]+\/free$/
+const SCREEN_MATCHERS: { screen: Screen; re: RegExp }[] = SCREENS.map((s) => ({
+  screen: s,
+  re: new RegExp("^" + s.path.replace(/[.*+?^${}()|\\]/g, "\\$&").replace(/\\\[[^\]]+\\\]/g, "[^/]+") + "$"),
+}));
+
+/** URL 경로(실제 값)를 매니페스트 화면에 매칭. 예: "/report/abc/free" → F-01 */
+export function matchScreen(pathname: string): Screen | undefined {
+  return SCREEN_MATCHERS.find((m) => m.re.test(pathname))?.screen;
+}
