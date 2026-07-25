@@ -1,10 +1,21 @@
 // [SCR: S-04] 사업자정보 표기 · scope: P1
-export default function Page() {
+import LegalShell from "@/components/site/LegalShell";
+import { businessInfoItems } from "@/config/company";
+
+export default function BusinessInfoPage() {
+  const items = businessInfoItems();
+
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-3 px-6 text-center">
-      <span className="text-xs font-medium tracking-wide text-indigo-600">S-04</span>
-      <h1 className="text-2xl font-bold text-gray-900">사업자정보 표기</h1>
-      <p className="text-sm text-gray-500">구현 예정</p>
-    </main>
+    <LegalShell title="사업자정보">
+      <dl className="rounded-2xl border border-gray-100 divide-y divide-gray-50 overflow-hidden">
+        {items.map((i) => (
+          <div key={i.label} className="grid grid-cols-3 gap-3 px-5 py-4 text-sm">
+            <dt className="font-semibold text-gray-500">{i.label}</dt>
+            <dd className="col-span-2 text-gray-900 break-all">{i.value}</dd>
+          </div>
+        ))}
+      </dl>
+      {/* TODO(company-info): 통신판매업신고번호 · 문의 이메일 확정 후 company.ts 에 채우면 자동 노출 */}
+    </LegalShell>
   );
 }

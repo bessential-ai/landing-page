@@ -1,10 +1,10 @@
 // [SCR: S-03] 환불정책 · scope: P1
-export default function Page() {
+import LegalShell, { LegalPending } from "@/components/site/LegalShell";
+
+export default function RefundPage() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-3 px-6 text-center">
-      <span className="text-xs font-medium tracking-wide text-indigo-600">S-03</span>
-      <h1 className="text-2xl font-bold text-gray-900">환불정책</h1>
-      <p className="text-sm text-gray-500">구현 예정</p>
-    </main>
+    <LegalShell title="환불정책">
+      <LegalPending />
+    </LegalShell>
   );
 }
