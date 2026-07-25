@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { matchScreen } from "@/lib/ia";
 import { SESSION_COOKIE } from "@/lib/auth/session";
+import { PAID_COOKIE } from "@/lib/payment/status";
 
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
@@ -22,7 +23,18 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  // TODO(payment-gate): Phase 4 — screen.paid(R 그룹) 미결제 접근 시 /report/[id]/paywall 로 리다이렉트
+  // 결제 게이트: R 그룹(screen.paid) 미결제 접근 시 페이월(F-03)로 리다이렉트 (IA-SPEC §2)
+  if (screen?.paid) {
+    const reportId = pathname.match(/^\/report\/([^/]+)/)?.[1];
+    const rawPaid = request.cookies.get(PAID_COOKIE)?.value ?? "";
+    const paidIds = decodeURIComponent(rawPaid).split(",").filter(Boolean);
+    if (reportId && !paidIds.includes(reportId)) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/report/${reportId}/paywall`;
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
+  }
 
   return NextResponse.next();
 }
