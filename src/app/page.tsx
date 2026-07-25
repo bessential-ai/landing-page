@@ -1,3 +1,4 @@
+// [SCR: P-01] 랜딩 — 한 줄 입력 · scope: P1
 "use client";
 
 import Image from "next/image";
