@@ -511,12 +511,11 @@ export const STEPS: Step[] = [
     blocks: [
       {
         kind: "prompt",
-        targetsTodo: "TODO(ai-targets): 대상 AI 목록·형식 확정",
+        targetsTodo: "TODO(ai-format): AI별 정확한 프롬프트 형식은 조정 예정",
         targets: [
-          { slot: "AI 슬롯 1", note: "선택한 AI에 맞는 형식으로 프롬프트 전환" },
-          { slot: "AI 슬롯 2", note: "선택한 AI에 맞는 형식으로 프롬프트 전환" },
-          { slot: "AI 슬롯 3", note: "선택한 AI에 맞는 형식으로 프롬프트 전환" },
-          { slot: "AI 슬롯 4", note: "선택한 AI에 맞는 형식으로 프롬프트 전환" },
+          { slot: "제미나이", note: "Gemini 형식 프롬프트로 전환" },
+          { slot: "클로드", note: "Claude 형식 프롬프트로 전환" },
+          { slot: "지피티", note: "GPT 형식 프롬프트로 전환" },
         ],
         commonPromptNote: "01~08 스텝(아이디어·진단·BM·시장·지표·로드맵·리스크·지원사업) 요약을 조립해, 사업 내용을 AI에게 이해시키는 공통 프롬프트를 생성합니다.",
         tools: [

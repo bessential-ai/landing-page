@@ -43,7 +43,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 function SectionHead({ eyebrow, title, sub }: { eyebrow: string; title: string; sub?: string }) {
   return (
-    <div className="mb-5">
+    <div className="mb-4">
       <Eyebrow>{eyebrow}</Eyebrow>
       <h2 className="mt-1 text-lg sm:text-2xl font-extrabold tracking-tight text-neutral-900">{title}</h2>
       {sub && <p className="mt-1 text-xs sm:text-sm text-neutral-500 break-keep">{sub}</p>}
@@ -99,23 +99,26 @@ function ExpandRow({ title, badge, defaultOpen = false, children }: { title: str
   );
 }
 
+// 네비에서만 쓰는 축약 라벨 (스텝 제목은 그대로 유지) — 한 줄에 다 들어오도록
+const NAV_SHORT: Record<string, string> = { risks: "리스크", "ai-bridge": "AI 연결", diagnosis: "종합 진단", bm: "BM", grants: "지원사업" };
+
 function StepNav({ view, setView, paid, setPaid }: { view: string; setView: (v: string) => void; paid: boolean; setPaid: (v: boolean) => void }) {
   return (
     <div className="border-b border-neutral-100 bg-white/90 backdrop-blur sticky top-0 z-30">
-      <div className="mx-auto max-w-4xl px-3 flex items-center justify-between gap-2 h-11">
-        <div className="flex gap-1 overflow-x-auto scrollbar-none">
+      <div className="mx-auto max-w-6xl px-4 flex items-center justify-between gap-3 min-h-11 py-1.5 flex-wrap">
+        <div className="flex flex-wrap gap-1">
           {VIEWS.map((v) => {
             const active = view === v.id;
             const isLocked = v.tier === "paid" && !paid;
             return (
-              <button key={v.id} onClick={() => setView(v.id)} className={`shrink-0 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors ${active ? "text-white" : "text-neutral-500 hover:text-neutral-900"}`} style={active ? { background: ACCENT_GRAD } : {}}>
-                <span className="font-mono opacity-70">{v.no}</span>{v.title}
+              <button key={v.id} onClick={() => setView(v.id)} className={`shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold transition-colors ${active ? "text-white" : "text-neutral-500 hover:text-neutral-900"}`} style={active ? { background: ACCENT_GRAD } : {}}>
+                <span className="font-mono opacity-70">{v.no}</span>{NAV_SHORT[v.id] ?? v.title}
                 {isLocked && <Lock size={9} className="opacity-60" />}
               </button>
             );
           })}
         </div>
-        <div className="hidden sm:flex items-center gap-1 rounded-full bg-neutral-100 p-0.5 shrink-0">
+        <div className="flex items-center gap-1 rounded-full bg-neutral-100 p-0.5 shrink-0">
           <button onClick={() => setPaid(false)} className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${!paid ? "bg-neutral-900 text-white" : "text-neutral-500"}`}>무료</button>
           <button onClick={() => setPaid(true)} className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${paid ? "text-white" : "text-neutral-500"}`} style={paid ? { background: ACCENT_GRAD } : {}}>결제 후</button>
         </div>
@@ -134,7 +137,7 @@ function PrimaryButton({ children, onClick, disabled }: { children: React.ReactN
 
 function StepShell({ step, children }: { step: Step; children: React.ReactNode }) {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-9 h-full overflow-y-auto scrollbar-none">
+    <div className="mx-auto max-w-4xl px-4 sm:px-6 py-4 sm:py-6 h-full overflow-y-auto scrollbar-none">
       <SectionHead eyebrow={`STEP ${step.no} · ${step.tier === "free" ? "무료" : "유료"}`} title={step.title} sub={step.summary} />
       {children}
       <SourceSlot sources={step.sources} />
@@ -145,7 +148,7 @@ function StepShell({ step, children }: { step: Step; children: React.ReactNode }
 /* ─────────────── 00 데모 메인 ─────────────── */
 function DemoMain({ onStart }: { onStart: () => void }) {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 sm:py-12 h-full overflow-y-auto scrollbar-none">
+    <div className="mx-auto max-w-4xl px-4 sm:px-6 py-5 sm:py-8 h-full overflow-y-auto scrollbar-none">
       <Eyebrow>DEMO</Eyebrow>
       <h1 className="mt-2 text-2xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 break-keep">아이디어가 리포트가 되기까지, 9단계</h1>
       <p className="mt-2 text-sm text-neutral-500 break-keep">상단 탭으로 각 단계를 둘러보세요. 무료 2단계는 열려 있고, 유료 7단계는 잠겨 있습니다.</p>
@@ -189,7 +192,7 @@ function IdeaInput({ onSubmit }: { onSubmit: () => void }) {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-9 h-full overflow-y-auto scrollbar-none relative">
+    <div className="mx-auto max-w-4xl px-4 sm:px-6 py-4 sm:py-6 h-full overflow-y-auto scrollbar-none relative">
       <SectionHead eyebrow="STEP 01 · 무료" title="아이디어 입력" sub="한 줄과 비즈니스 모델을 채우면, AI가 이해한 내용을 확인·수정합니다." />
 
       {/* 주인공: 한 줄 입력 */}
@@ -677,7 +680,7 @@ function AiBridge() {
           </button>
         ))}
       </div>
-      <div className="text-[10px] text-amber-600 flex items-center gap-1 mb-3"><NeedsCheck /> {pb.targetsTodo.replace("TODO(ai-targets): ", "")}</div>
+      <div className="text-[10px] text-amber-600 flex items-center gap-1 mb-3"><NeedsCheck /> {pb.targetsTodo.replace(/TODO\([a-z-]+\): /, "")}</div>
 
       {/* 공통 프롬프트 */}
       <div className="rounded-2xl border border-neutral-200 bg-white p-4">
@@ -690,17 +693,17 @@ function AiBridge() {
       </div>
 
       {/* 외부 툴 연계 3카드 */}
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2.5 items-stretch">
         {pb.tools.map((t, i) => (
-          <div key={i} className="rounded-xl border border-neutral-200 bg-white p-3.5">
+          <div key={i} className="rounded-xl border border-neutral-200 bg-white p-3.5 flex flex-col h-full">
             <div className="text-neutral-700 mb-1.5">{TOOL_ICON[t.name] ?? <Layers size={18} />}</div>
             <div className="text-sm font-bold text-neutral-900">{t.name}</div>
-            <div className="text-[11px] text-neutral-500 break-keep mt-0.5">{t.use}</div>
-            <button className="mt-2 w-full text-[11px] rounded-lg border border-neutral-200 py-1.5 text-neutral-500" disabled>연결하기</button>
+            <div className="text-[11px] text-neutral-500 break-keep mt-0.5 flex-1">{t.use}</div>
+            <button className="mt-3 w-full text-[11px] rounded-lg border border-neutral-200 py-1.5 text-neutral-500" disabled>연결하기</button>
           </div>
         ))}
       </div>
-      <div className="mt-1.5 text-[10px] text-amber-600 flex items-center gap-1"><NeedsCheck /> {pb.toolIntegrationTodo.replace("TODO(tool-integration): ", "")}</div>
+      <div className="mt-1.5 text-[10px] text-amber-600 flex items-center gap-1"><NeedsCheck /> {pb.toolIntegrationTodo.replace(/TODO\([a-z-]+\): /, "")}</div>
     </StepShell>
   );
 }
@@ -720,7 +723,7 @@ export default function Mockup() {
       <FontStyles />
       {/* 상단 유틸 바 */}
       <div className="border-b border-neutral-100 bg-white">
-        <div className="mx-auto max-w-4xl px-4 h-12 flex items-center justify-between">
+        <div className="mx-auto max-w-6xl px-4 h-12 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2"><Image src="/logo.svg" alt="B Essential" width={104} height={18} priority /></Link>
           <Link href="/pricing" className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1">요금제 <ChevronRight size={12} /></Link>
         </div>
@@ -735,7 +738,7 @@ export default function Mockup() {
             {view === "idea-input" && <IdeaInput onSubmit={() => go("diagnosis")} />}
             {view === "diagnosis" && <Diagnosis onNext={() => go("bm")} />}
             {step && locked ? (
-              <div className="mx-auto max-w-3xl px-4 py-6 sm:py-9 h-full overflow-y-auto scrollbar-none">
+              <div className="mx-auto max-w-4xl px-4 sm:px-6 py-4 sm:py-6 h-full overflow-y-auto scrollbar-none">
                 <SectionHead eyebrow={`STEP ${step.no} · 유료`} title={step.title} sub={step.summary} />
                 <PaidLock locked teaser={step.lockedTeaser} onUnlock={unlock}>
                   <LockedPreview id={view} />
