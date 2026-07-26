@@ -82,23 +82,36 @@
 | G-04 | 결제 실패 | `/checkout/[reportId]/failed` | P1 |
 | G-05 | 창업자 프로필 STEP3 | `/onboarding/profile` | P1 |
 
-### R — 유료 리포트
+### R — 유료 리포트 (9스텝 기준 · 2026-07-26 갱신)
+
+데모 산출물(`/mockup`·`/sample`)의 9스텝 구조에 맞춰 R 그룹을 13개 → **9개**로 정리한다.
+데이터 단일 소스는 `src/data/demo-report.ts`.
 
 | ID | 화면명 | 경로 | scope |
 |---|---|---|---|
-| R-00 | 리포트 허브 — 판정 | `/report/[reportId]` | P1 |
-| R-01 | ① 장점 · 단점 | `/report/[reportId]/strengths` | P1 |
-| R-02 | ② 유사 서비스 | `/report/[reportId]/competitors` | P1 |
-| R-03 | ③ 규제 · 법률 리스크 | `/report/[reportId]/risks` | P1 |
-| R-04 | ④ 시장 조사 | `/report/[reportId]/market` | P1 |
-| R-05 | ⑤ 핵심 지표 | `/report/[reportId]/metrics` | P1 |
-| R-06 | ⑥ 검증 방법 | `/report/[reportId]/validation` | P1 |
-| R-07 | ⑦ 로드맵 P0~P5 | `/report/[reportId]/roadmap` | P1 |
-| R-08 | ⑧ 지원사업 매칭 | `/report/[reportId]/grants` | P1 |
-| R-09 | ⑨ 관련 사례 | `/report/[reportId]/cases` | P1 |
-| R-10 | 반려 리포트 · 대안 | `/report/[reportId]/rejected` | P1 |
-| R-11 | 근거 · 출처 상세 | `/report/[reportId]/sources` | P1 |
-| R-12 | PDF 출력 · 공유 | `/report/[reportId]/export` | P1 |
+| R-01 | 종합 진단 리포트 | `/report/[reportId]` | P1 |
+| R-02 | 비즈니스 모델 | `/report/[reportId]/bm` | P1 |
+| R-03 | 시장조사 | `/report/[reportId]/market` | P1 |
+| R-04 | 핵심 지표 | `/report/[reportId]/metrics` | P1 |
+| R-05 | 로드맵 | `/report/[reportId]/roadmap` | P1 |
+| R-06 | 리스크 / 해결 필요 | `/report/[reportId]/risks` | P1 |
+| R-07 | 지원사업 소개 | `/report/[reportId]/grants` | P1 |
+| R-08 | AI 프롬프트 · 앱 연결 | `/report/[reportId]/ai-bridge` | P1 |
+| R-09 | 근거 · 출처 | `/report/[reportId]/sources` | P1 |
+
+**흡수 매핑 (기존 13개 → 9개):**
+- 기존 `R-00 판정` · `R-01 장점·단점` · `R-02 유사 서비스` · `R-09 관련 사례` · `R-10 반려 분기` → **R-01 종합 진단 리포트의 하위 블록**으로 흡수
+- 기존 `R-06 검증 방법` → **R-04 핵심 지표**로 흡수 (검증 가설 포함)
+- 기존 `R-12 PDF 출력` → **R-07 지원사업의 연계 산출물**로 흡수
+- 신규 추가: **R-08 AI 프롬프트 · 앱 연결**
+
+**사용자 대면 화면 수 재계산:** R 그룹이 13 → 9로 줄어(−4), 전체 사용자 대면 화면 수는
+**기존 55개 → 51개** (A5 · D6 · P5 · S7 · F3 · G5 · **R9** · V3 · M6 · T2). 관리자(B) 6종은 범위 밖(불변).
+
+**⚠️ 구현 상태 주석:** 실제 라우트(`src/app/report/[reportId]/**`)와 `src/lib/ia.ts` 매니페스트는
+Phase 5에서 만든 **R-00~R-12 (13개)를 그대로 유지**한다(라이브 반영됨). 위 9스텝은 현재
+`/mockup`·`/sample`의 프레젠테이션 기준이자, 향후 R 라우트 재편의 목표 구조다. 라우트 재편은
+별도 단계로 진행하며, 그 전까지 본 문서(9스텝)와 `ia.ts`(13개)는 의도적으로 다르다.
 
 ### V — 재진단
 
