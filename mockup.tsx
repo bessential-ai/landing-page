@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import {
   STEPS, FREE_STEPS, PAID_STEPS, DEMO_IDEA, ATTACH_LIMIT,
-  type Step, type ScoreBlock, type ProsConsBlock, type VerdictBlock, type BeforeAfterBlock,
+  type Step, type ScoreBlock, type ProsConsBlock, type VerdictBlock, type LeanCanvasBlock, type LeanCanvasCell,
   type MarketStageBlock, type MetricItemBlock, type RoadmapPhaseBlock, type RiskCardBlock,
   type GrantBlock, type PromptBlock, type CollapseBlock, type CompetitorCategoriesBlock,
   type CaseStudiesBlock, type RiskLevel, type Source,
@@ -387,36 +387,71 @@ function CaseStudies({ block }: { block: CaseStudiesBlock }) {
   );
 }
 
-/* ─────────────── 03 비즈니스 모델 (Before/After) ─────────────── */
+/* ─────────────── 03 비즈니스 모델 (린 캔버스 9블록 · Before/After 동시) ─────────────── */
+function CanvasCell({ cell, className = "" }: { cell: LeanCanvasCell; className?: string }) {
+  const [openWhy, setOpenWhy] = useState(false);
+  return (
+    <div className={`rounded-lg border border-neutral-200 bg-white p-2.5 flex flex-col ${className}`}>
+      <div className="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider mb-1.5 text-indigo-500">{cell.label}</div>
+      {/* Before (내 입력) — 동시에 표시, 흐림·취소선 */}
+      <div className="mb-1.5 text-[10px] text-neutral-400 break-keep line-through decoration-neutral-300">Before · {cell.before}</div>
+      {/* After (AI 완성본) */}
+      <ul className="space-y-1 flex-1">
+        {cell.after.map((t, i) => (
+          <li key={i} className="text-[11px] text-neutral-700 break-keep leading-relaxed flex gap-1">
+            <span className="text-indigo-400 shrink-0">·</span><span>{t}</span>
+          </li>
+        ))}
+      </ul>
+      {/* 변경 이유 — 확인 가능 (칸마다) */}
+      <button onClick={() => setOpenWhy((v) => !v)} className="mt-1.5 inline-flex items-center gap-1 self-start text-[9px] font-bold text-amber-600 hover:text-amber-700">
+        <Lightbulb size={10} /> 왜 바꿨나 <ChevronDown size={9} className={openWhy ? "rotate-180" : ""} />
+      </button>
+      {openWhy && <p className="mt-1 rounded bg-amber-50 border border-amber-100 px-2 py-1.5 text-[10px] text-neutral-600 break-keep leading-relaxed">{cell.why}</p>}
+    </div>
+  );
+}
+
+function LeanCanvas({ cells }: { cells: LeanCanvasCell[] }) {
+  const byId = Object.fromEntries(cells.map((c) => [c.id, c])) as Record<string, LeanCanvasCell>;
+  const ordered = ["problem", "solution", "uvp", "advantage", "segment", "metrics", "channel", "cost", "revenue"];
+  return (
+    <>
+      {/* 데스크톱: 클래식 린 캔버스 배치 (9블록 한눈에) */}
+      <div className="hidden md:block">
+        <div className="grid grid-cols-5 gap-2 items-stretch">
+          <CanvasCell cell={byId.problem} className="row-span-2" />
+          <CanvasCell cell={byId.solution} />
+          <CanvasCell cell={byId.uvp} className="row-span-2" />
+          <CanvasCell cell={byId.advantage} />
+          <CanvasCell cell={byId.segment} className="row-span-2" />
+          <CanvasCell cell={byId.metrics} />
+          <CanvasCell cell={byId.channel} />
+        </div>
+        <div className="grid grid-cols-2 gap-2 mt-2">
+          <CanvasCell cell={byId.cost} />
+          <CanvasCell cell={byId.revenue} />
+        </div>
+      </div>
+      {/* 모바일: 순서대로 스택 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:hidden gap-2">
+        {ordered.map((id) => <CanvasCell key={id} cell={byId[id]} />)}
+      </div>
+    </>
+  );
+}
+
 function BusinessModel({ onNext }: { onNext: () => void }) {
   const step = stepById("bm");
-  const ba = step.blocks.find((b) => b.kind === "beforeAfter") as BeforeAfterBlock;
-  const [showBefore, setShowBefore] = useState(false);
+  const lc = step.blocks.find((b) => b.kind === "leanCanvas") as LeanCanvasBlock;
   return (
     <StepShell step={step}>
-      <div className="flex items-center justify-between mb-3">
-        <div className="text-xs text-neutral-500">AI가 다시 설계한 비즈니스 모델 — <span className="font-semibold text-neutral-700">바뀐 이유</span>가 핵심입니다.</div>
-        <button onClick={() => setShowBefore((v) => !v)} className="text-[11px] text-neutral-400 hover:text-neutral-700 inline-flex items-center gap-1">{showBefore ? "Before 접기" : "Before 보기"} <ChevronDown size={12} className={showBefore ? "rotate-180" : ""} /></button>
+      <div className="mb-3">
+        <div className="text-xs text-neutral-500 break-keep">처음 적은 한 줄 입력(<span className="text-neutral-400">Before</span>)이 9블록 린 캔버스(<span className="text-indigo-600 font-semibold">After</span>)로 어떻게 채워졌는지 한 화면에서 비교하세요. 칸마다 <span className="text-amber-600 font-semibold">‘왜 바꿨나’</span>를 열어 변경 이유를 확인할 수 있습니다.</div>
       </div>
-      <div className="space-y-3">
-        {ba.rows.map((r, i) => (
-          <div key={i} className="rounded-2xl border border-neutral-200 bg-white overflow-hidden">
-            <div className="px-4 py-2 bg-neutral-50 border-b border-neutral-100 text-[11px] font-bold text-neutral-500">{r.field}</div>
-            <div className="p-4">
-              {showBefore && (
-                <div className="mb-2 text-[11px] text-neutral-400 line-through decoration-neutral-300 opacity-70">Before · {r.before}</div>
-              )}
-              <div className="flex items-start gap-2">
-                <span className="mt-0.5 text-[9px] font-bold text-white rounded px-1.5 py-0.5 shrink-0" style={{ background: ACCENT_GRAD }}>AFTER</span>
-                <div className="text-sm font-semibold text-neutral-900 break-keep">{r.after}</div>
-              </div>
-              <div className="mt-2 rounded-lg bg-indigo-50/50 border border-indigo-100 px-3 py-2">
-                <div className="flex items-center gap-1 text-[10px] font-bold text-indigo-600"><Lightbulb size={11} /> AI가 바꾼 이유</div>
-                <p className="text-[11px] text-neutral-600 mt-0.5 break-keep">{r.why}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="rounded-2xl border border-indigo-100 bg-white p-3 sm:p-4 shadow-sm">
+        <div className="flex items-center gap-1.5 mb-3 text-[11px] font-bold text-indigo-600"><Sparkles size={13} /> 린 캔버스 · Before → After · 9블록</div>
+        <LeanCanvas cells={lc.cells} />
       </div>
       <div className="mt-5"><PrimaryButton onClick={onNext}>시장조사 보기 <ArrowRight size={16} /></PrimaryButton></div>
     </StepShell>
